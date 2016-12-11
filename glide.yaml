@@ -1,0 +1,5 @@
+package: github.com/o1egl/govatar
+import:
+- package: github.com/skarademir/naturalsort
+- package: github.com/urfave/cli
+  version: ^1.19.1
