@@ -14,7 +14,7 @@ clean:
 		rm -rf build/
 
 assets:
-	go-bindata -nomemcopy -pkg govatar data/...
+	go-bindata -nomemcopy -pkg bindata -o internal/bindata/bindata.go data/...
 
 $(PLATFORMS):
 	GOOS=$(os) GOARCH=$(arch) go build -ldflags "-X main.version=${VERSION}" -o 'build/govatar$(ext)' github.com/o1egl/govatar/govatar

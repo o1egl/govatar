@@ -3,7 +3,6 @@ package govatar
 import (
 	"bytes"
 	"errors"
-	"github.com/skarademir/naturalsort"
 	"image"
 	"image/draw"
 	"image/gif"
@@ -15,6 +14,9 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/o1egl/govatar/internal/bindata"
+	"github.com/skarademir/naturalsort"
 )
 
 type person struct {
@@ -136,7 +138,7 @@ func drawImg(dst draw.Image, asset string, err error) error {
 	if err != nil {
 		return err
 	}
-	src, _, err := image.Decode(bytes.NewReader(MustAsset(asset)))
+	src, _, err := image.Decode(bytes.NewReader(bindata.MustAsset(asset)))
 	if err != nil {
 		return err
 	}
@@ -154,7 +156,7 @@ func getPerson(gender string) person {
 }
 
 func readAssetsFrom(dir string) []string {
-	assets, _ := AssetDir(dir)
+	assets, _ := bindata.AssetDir(dir)
 	for i, asset := range assets {
 		assets[i] = filepath.Join(dir, asset)
 	}
