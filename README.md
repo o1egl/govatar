@@ -1,5 +1,8 @@
 # GOvatar
+[![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE)
 [![GoDoc](https://godoc.org/github.com/o1egl/govatar?status.svg)](https://godoc.org/github.com/o1egl/govatar)
+[![Build Status](http://img.shields.io/travis/o1egl/govatar.svg?style=flat-square)](https://travis-ci.org/o1egl/govatar)
+[![Coverage Status](http://img.shields.io/coveralls/o1egl/govatar.svg?style=flat-square)](https://coveralls.io/r/o1egl/govatar)
 
 ![GOvatar image](files/avatars.jpg)
 
@@ -20,23 +23,26 @@ $ go get -u github.com/o1egl/govatar/...
 ## Usage
 
 ```bash
-    $ govatar generate male -o avatar.png     # Generates random avatar.png for male
-    $ govatar generate female -o avatar.png   # Generates random avatar.png for female
-    $ govatar -h                                 # Display help message
+    $ govatar generate male -o avatar.png                        # Generates random avatar.png for male
+    $ govatar generate female -o avatar.png                      # Generates random avatar.png for female
+    $ govatar generate male -u username@site.com -o avatar.png   # Generates avatar.png for specified username
+    $ govatar -h                                                 # Display help message
 ```
 
 #### As lib
 
-Generates avatar and save it to file
+Generates avatar and save it to filePath
 
 ```go
-    govatar.GenerateFile(govatar.MALE, "/path/to/file")
+    err := govatar.GenerateFile(govatar.MALE, "/path/to/avatar.jpg"
+    err := govatar.GenerateFileFromUsername(govatar.MALE, "username", "/path/to/avatar.jpg")
 ````
 
 Generates avatar and return it as image.Image
 
 ```go
     img, err := govatar.Generate(govatar.MALE)
+    img, err := govatar.GenerateFromUsername(govatar.MALE, "username")
 ````
 
 
@@ -44,8 +50,8 @@ Generates avatar and return it as image.Image
 
 ### Adding new skins
 
-1. Add new skins to data/background, male/clothes, female/hair and etc...
-2. Run ``$ go-bindata -nomemcopy -pkg govatar data/...`` for building embedded assets.
+1. Add new skins to background, male/clothes, female/hair and etc...
+2. Run ``$ make assets`` for building embedded assets.
 3. Submit pull request :)
 
 ### Submitting a Pull Request

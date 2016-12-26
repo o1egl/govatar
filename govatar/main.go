@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/urfave/cli"
 	"github.com/o1egl/govatar"
-	"os"
+	"github.com/urfave/cli"
 	"log"
+	"os"
 )
 
-var version = "0.1.0-dev"
+var version = "0.2.0-dev"
 
 func main() {
 	app := cli.NewApp()
@@ -18,19 +18,25 @@ func main() {
 	app.Author = "Oleg Lobanov"
 	app.Commands = []cli.Command{
 		{
-			Name:    "generate",
+			Name:      "generate",
 			ArgsUsage: "<(male|m)|(female|f)>",
-			Aliases: []string{"g"},
-			Usage:   "Generates random avatar",
+			Aliases:   []string{"g"},
+			Usage:     "Generates random avatar",
 			Flags: []cli.Flag{
 				cli.StringFlag{
-					Name: "output,o",
+					Name:  "output,o",
 					Value: "avatar.png",
 					Usage: "Output file name",
+				},
+				cli.StringFlag{
+					Name:  "username,u",
+					Value: "",
+					Usage: "Username",
 				},
 			},
 			Action: func(c *cli.Context) {
 				var g govatar.Gender
+				var err error
 				switch c.Args().First() {
 				case "male", "m":
 					g = govatar.MALE
@@ -38,9 +44,15 @@ func main() {
 					g = govatar.FEMALE
 				default:
 					fmt.Println("Incorrect gender param. Run `govatar help generate`")
-					os.Exit(0)
+					os.Exit(1)
 				}
-				err := govatar.GenerateFile(g, c.String("output"))
+
+				username := c.String("username")
+				if username != "" {
+					err = govatar.GenerateFileFromUsername(g, username, c.String("output"))
+				} else {
+					err = govatar.GenerateFile(g, c.String("output"))
+				}
 				if err != nil {
 					log.Fatal(err)
 				}
