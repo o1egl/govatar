@@ -6,9 +6,7 @@
 
 ![GOvatar image](files/avatars.jpg)
 
-## Overview
-
-GOvatar is an avatar generator writen in GO
+GOvatar is an avatar generation library writen in GO
 
 ## Install
 
