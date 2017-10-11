@@ -3,7 +3,6 @@ package govatar
 import (
 	"bytes"
 	"errors"
-	"github.com/o1egl/govatar/bindata"
 	"hash/fnv"
 	"image"
 	"image/draw"
@@ -16,9 +15,11 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/o1egl/govatar/bindata"
 )
 
-var unknownGender = errors.New("Unknown gender")
+var errUnknownGender = errors.New("Unknown gender")
 
 type person struct {
 	Clothes []string
@@ -60,7 +61,7 @@ func Generate(gender Gender) (image.Image, error) {
 	case FEMALE:
 		return randomAvatar(assetsStore.Female, time.Now().UnixNano())
 	default:
-		return nil, unknownGender
+		return nil, errUnknownGender
 	}
 }
 
@@ -87,7 +88,7 @@ func GenerateFromUsername(gender Gender, username string) (image.Image, error) {
 	case FEMALE:
 		return randomAvatar(assetsStore.Female, int64(h.Sum32()))
 	default:
-		return nil, unknownGender
+		return nil, errUnknownGender
 	}
 }
 

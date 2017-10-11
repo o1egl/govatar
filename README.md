@@ -3,6 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/o1egl/govatar?status.svg)](https://godoc.org/github.com/o1egl/govatar)
 [![Build Status](http://img.shields.io/travis/o1egl/govatar.svg?style=flat-square)](https://travis-ci.org/o1egl/govatar)
 [![Coverage Status](http://img.shields.io/coveralls/o1egl/govatar.svg?style=flat-square)](https://coveralls.io/r/o1egl/govatar)
+[![Go Report Card](https://goreportcard.com/badge/github.com/o1egl/govatar)](https://goreportcard.com/report/github.com/o1egl/govatar)
 
 ![GOvatar image](files/avatars.jpg)
 

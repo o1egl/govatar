@@ -57,8 +57,8 @@ func (s naturalSort) Less(i, j int) bool {
 		}
 
 	}
-	// Fall back for cases where space characters have been annihliated by the replacment call
-	// Here we iterate over the unmolsested string and prioritize numbers over
+	// Fall back for cases where space characters have been annihilated by the replacement call
+	// Here we iterate over the unmolested string and prioritize numbers
 	for index := 0; index < len(s[i]) && index < len(s[j]); index++ {
 		if isNumber(s[i][index]) || isNumber(s[j][index]) {
 			return isNumber(s[i][index])

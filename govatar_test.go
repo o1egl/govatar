@@ -1,12 +1,13 @@
 package govatar
 
 import (
-	"github.com/stretchr/testify/assert"
 	"image"
 	"image/color"
 	"net/http"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerate(t *testing.T) {

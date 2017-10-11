@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/o1egl/govatar"
-	"github.com/urfave/cli"
 	"log"
 	"os"
+
+	"github.com/o1egl/govatar"
+	"github.com/urfave/cli"
 )
 
-var version = "0.2.0-dev"
+var version = "dev"
 
 func main() {
 	app := cli.NewApp()
