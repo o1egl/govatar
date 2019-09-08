@@ -17,6 +17,6 @@ assets:
 	go-bindata -nomemcopy -pkg bindata -o ./bindata/bindata.go -ignore "(.+)\.go" data/...
 
 $(PLATFORMS):
-	GOOS=$(os) GOARCH=$(arch) go build -ldflags "-X main.version=${VERSION}" -o 'build/govatar$(ext)' github.com/o1egl/govatar/govatar
+	GOOS=$(os) GOARCH=$(arch) go build -ldflags "-X main.version=${VERSION}" -o 'build/govatar$(ext)' ./govatar
 	zip 'build/govatar-$(os)-$(arch).$(VERSION).zip' 'build/govatar$(ext)'
 
