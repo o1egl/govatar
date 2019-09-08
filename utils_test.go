@@ -23,7 +23,7 @@ func TestRandStringSlice(t *testing.T) {
 	rnd := rand.New(rand.NewSource(10))
 	values := make([]string, 0, 5)
 	for i := 0; i < 5; i++ {
-		values = append(values, randSliceString(rnd, slice))
+		values = append(values, randStringSliceItem(rnd, slice))
 	}
 	hasRandomValues := false
 	for _, val := range values {

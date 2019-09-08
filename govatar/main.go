@@ -50,7 +50,7 @@ func main() {
 
 				username := c.String("username")
 				if username != "" {
-					err = govatar.GenerateFileFromUsername(g, username, c.String("output"))
+					err = govatar.GenerateFileForUsername(g, username, c.String("output"))
 				} else {
 					err = govatar.GenerateFile(g, c.String("output"))
 				}

@@ -68,7 +68,7 @@ func generateFileTest(t *testing.T, gender Gender) {
 
 func TestGenerateFromString(t *testing.T) {
 	// Male test
-	avatar1, err := GenerateFromUsername(MALE, "username@site.com")
+	avatar1, err := GenerateForUsername(MALE, "username@site.com")
 	bounds := avatar1.Bounds()
 
 	assert.NoError(t, err)
@@ -77,15 +77,15 @@ func TestGenerateFromString(t *testing.T) {
 	assert.Equal(t, 400, bounds.Dx())
 	assert.Equal(t, 400, bounds.Dy())
 
-	avatar2, err := GenerateFromUsername(MALE, "username@site.com")
+	avatar2, err := GenerateForUsername(MALE, "username@site.com")
 	assert.NoError(t, err)
 	assert.True(t, areImagesEquals(avatar1, avatar2))
 
 	// Female test
-	avatar1, err = GenerateFromUsername(FEMALE, "username@site.com")
+	avatar1, err = GenerateForUsername(FEMALE, "username@site.com")
 	assert.NoError(t, err)
 
-	avatar2, err = GenerateFromUsername(FEMALE, "username2@site.com")
+	avatar2, err = GenerateForUsername(FEMALE, "username2@site.com")
 	assert.NoError(t, err)
 
 	assert.False(t, areImagesEquals(avatar1, avatar2))
@@ -111,7 +111,7 @@ func generateFileFromStringTest(t *testing.T, gender Gender) {
 
 	for _, tt := range imagesTests {
 		os.Remove(tt.imageName)
-		err := GenerateFileFromUsername(gender, "username@site.com", tt.imageName)
+		err := GenerateFileForUsername(gender, "username@site.com", tt.imageName)
 		assert.Nil(t, err)
 
 		buf := make([]byte, 512)

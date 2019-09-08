@@ -15,7 +15,7 @@ clean:
 
 assets:
 	find ./data ! -regex ".*\.png$$" -type f | xargs rm
-	go-bindata -nomemcopy -pkg bindata -o ./bindata/bindata.go data/...
+	go-bindata -nomemcopy -nometadata -pkg bindata -o ./bindata/bindata.go data/...
 	goimports -w bindata/bindata.go
 
 $(PLATFORMS):
