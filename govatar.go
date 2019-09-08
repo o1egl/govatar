@@ -19,7 +19,7 @@ import (
 	"github.com/o1egl/govatar/bindata"
 )
 
-var errUnknownGender = errors.New("Unknown gender")
+var ErrUnsupportedGender = errors.New("unsupported gender")
 
 type person struct {
 	Clothes []string
@@ -49,7 +49,7 @@ const (
 func init() {
 	male := getPerson(MALE)
 	female := getPerson(FEMALE)
-	assetsStore = &store{Background: readAssetsFrom("data/background"), Male: male, Female: female}
+	assetsStore = &store{Background: assetsList("data/background"), Male: male, Female: female}
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
@@ -61,7 +61,7 @@ func Generate(gender Gender) (image.Image, error) {
 	case FEMALE:
 		return randomAvatar(assetsStore.Female, time.Now().UnixNano())
 	default:
-		return nil, errUnknownGender
+		return nil, ErrUnsupportedGender
 	}
 }
 
@@ -75,8 +75,8 @@ func GenerateFile(gender Gender, filePath string) error {
 	return saveToFile(img, filePath)
 }
 
-// GenerateFromUsername generates avatar from string
-func GenerateFromUsername(gender Gender, username string) (image.Image, error) {
+// GenerateForUsername generates avatar for username
+func GenerateForUsername(gender Gender, username string) (image.Image, error) {
 	h := fnv.New32a()
 	_, err := h.Write([]byte(username))
 	if err != nil {
@@ -88,14 +88,14 @@ func GenerateFromUsername(gender Gender, username string) (image.Image, error) {
 	case FEMALE:
 		return randomAvatar(assetsStore.Female, int64(h.Sum32()))
 	default:
-		return nil, errUnknownGender
+		return nil, ErrUnsupportedGender
 	}
 }
 
-// GenerateFileFromUsername generates avatar from string and save it to specified file.
+// GenerateFileForUsername generates avatar for username and save it to specified file.
 // Image format depends on file extension (jpeg, jpg, png, gif). Default is png
-func GenerateFileFromUsername(gender Gender, username string, filePath string) error {
-	img, err := GenerateFromUsername(gender, username)
+func GenerateFileForUsername(gender Gender, username string, filePath string) error {
+	img, err := GenerateForUsername(gender, username)
 	if err != nil {
 		return err
 	}
@@ -123,12 +123,12 @@ func randomAvatar(p person, seed int64) (image.Image, error) {
 	rnd := rand.New(rand.NewSource(seed))
 	avatar := image.NewRGBA(image.Rect(0, 0, 400, 400))
 	var err error
-	err = drawImg(avatar, randSliceString(rnd, assetsStore.Background), err)
-	err = drawImg(avatar, randSliceString(rnd, p.Face), err)
-	err = drawImg(avatar, randSliceString(rnd, p.Clothes), err)
-	err = drawImg(avatar, randSliceString(rnd, p.Mouth), err)
-	err = drawImg(avatar, randSliceString(rnd, p.Hair), err)
-	err = drawImg(avatar, randSliceString(rnd, p.Eye), err)
+	err = drawImg(avatar, randStringSliceItem(rnd, assetsStore.Background), err)
+	err = drawImg(avatar, randStringSliceItem(rnd, p.Face), err)
+	err = drawImg(avatar, randStringSliceItem(rnd, p.Clothes), err)
+	err = drawImg(avatar, randStringSliceItem(rnd, p.Mouth), err)
+	err = drawImg(avatar, randStringSliceItem(rnd, p.Hair), err)
+	err = drawImg(avatar, randStringSliceItem(rnd, p.Eye), err)
 	return avatar, err
 }
 
@@ -155,15 +155,15 @@ func getPerson(gender Gender) person {
 	}
 
 	return person{
-		Clothes: readAssetsFrom("data/" + genderPath + "/clothes"),
-		Eye:     readAssetsFrom("data/" + genderPath + "/eye"),
-		Face:    readAssetsFrom("data/" + genderPath + "/face"),
-		Hair:    readAssetsFrom("data/" + genderPath + "/hair"),
-		Mouth:   readAssetsFrom("data/" + genderPath + "/mouth"),
+		Clothes: assetsList("data/" + genderPath + "/clothes"),
+		Eye:     assetsList("data/" + genderPath + "/eye"),
+		Face:    assetsList("data/" + genderPath + "/face"),
+		Hair:    assetsList("data/" + genderPath + "/hair"),
+		Mouth:   assetsList("data/" + genderPath + "/mouth"),
 	}
 }
 
-func readAssetsFrom(dir string) []string {
+func assetsList(dir string) []string {
 	assets, _ := bindata.AssetDir(dir)
 	for i, asset := range assets {
 		assets[i] = filepath.Join(dir, asset)

@@ -11,8 +11,8 @@ func randInt(rnd *rand.Rand, min int, max int) int {
 	return min + rnd.Intn(max-min)
 }
 
-// randSliceString returns random element from slice of string
-func randSliceString(rnd *rand.Rand, slice []string) string {
+// randStringSliceItem returns random element from slice of string
+func randStringSliceItem(rnd *rand.Rand, slice []string) string {
 	return slice[randInt(rnd, 0, len(slice))]
 }
 
@@ -23,11 +23,12 @@ var r = regexp.MustCompile(`[^0-9]+|[0-9]+`)
 func (s naturalSort) Len() int {
 	return len(s)
 }
+
 func (s naturalSort) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
-func (s naturalSort) Less(i, j int) bool {
 
+func (s naturalSort) Less(i, j int) bool {
 	spliti := r.FindAllString(strings.Replace(s[i], " ", "", -1), -1)
 	splitj := r.FindAllString(strings.Replace(s[j], " ", "", -1), -1)
 
@@ -66,6 +67,7 @@ func (s naturalSort) Less(i, j int) bool {
 	}
 	return s[i] < s[j]
 }
+
 func isNumber(input uint8) bool {
 	return input >= '0' && input <= '9'
 }
