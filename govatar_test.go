@@ -3,6 +3,7 @@ package govatar
 import (
 	"image"
 	"image/color"
+	"math/rand"
 	"net/http"
 	"os"
 	"testing"
@@ -11,122 +12,164 @@ import (
 )
 
 func TestGenerate(t *testing.T) {
-	// Male test
-	avatar, err := Generate(MALE)
-	bounds := avatar.Bounds()
+	testCases := map[string]struct {
+		gender Gender
+		err    error
+	}{
+		"male": {
+			gender: MALE,
+		},
+		"female": {
+			gender: FEMALE,
+		},
+		"unsupported": {
+			gender: Gender(-1),
+			err:    ErrUnsupportedGender,
+		},
+	}
 
-	assert.NoError(t, err)
-	assert.NotNil(t, avatar)
-	assert.False(t, bounds.Empty())
-	assert.Equal(t, 400, bounds.Dx())
-	assert.Equal(t, 400, bounds.Dy())
+	for name, test := range testCases {
+		t.Run(name, func(t *testing.T) {
+			avatar, err := Generate(test.gender)
+			assert.Equal(t, test.err, err)
+			if test.err == nil && assert.NotNil(t, avatar) {
+				bounds := avatar.Bounds()
+				if assert.False(t, bounds.Empty()) {
+					assert.Equal(t, 400, bounds.Dx())
+					assert.Equal(t, 400, bounds.Dy())
+				}
+			}
+		})
+	}
+}
 
-	// Female test
-	avatar, err = Generate(FEMALE)
-	bounds = avatar.Bounds()
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyz")
 
-	assert.NoError(t, err)
-	assert.NotNil(t, avatar)
-	assert.False(t, bounds.Empty())
-	assert.Equal(t, 400, bounds.Dx())
-	assert.Equal(t, 400, bounds.Dy())
+func randStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
 
 func TestGenerateFile(t *testing.T) {
-	generateFileTest(t, MALE)
-	generateFileTest(t, FEMALE)
-}
-
-func generateFileTest(t *testing.T, gender Gender) {
-	imagesTests := []struct {
+	fileName := randStringRunes(6)
+	testCases := map[string]struct {
 		imageName string
 		mimeType  string
 	}{
-		{"avatar.jpeg", "image/jpeg"},
-		{"avatar.jpg", "image/jpeg"},
-		{"avatar.png", "image/png"},
-		{"avatar.gif", "image/gif"},
-		{"avatar.xyz", "image/png"},
+		"jpeg": {imageName: fileName + ".jpeg", mimeType: "image/jpeg"},
+		"jpg":  {imageName: fileName + ".jpg", mimeType: "image/jpeg"},
+		"png":  {imageName: fileName + ".png", mimeType: "image/png"},
+		"gif":  {imageName: fileName + ".gif", mimeType: "image/gif"},
+		"xyz":  {imageName: fileName + ".xyz", mimeType: "image/png"},
 	}
-	// test jpeg generation
-	for _, tt := range imagesTests {
-		os.Remove(tt.imageName)
-		err := GenerateFile(gender, tt.imageName)
-		assert.Nil(t, err)
 
-		buf := make([]byte, 512)
-		f, err := os.Open(tt.imageName)
-		assert.Nil(t, err)
-		defer f.Close()
+	for name, test := range testCases {
+		t.Run(name, func(t *testing.T) {
+			os.Remove(test.imageName)
+			defer os.Remove(test.imageName)
+			err := GenerateFile(MALE, test.imageName)
+			if assert.NoError(t, err) {
+				buf := make([]byte, 512)
+				f, err := os.Open(test.imageName)
+				if assert.NoError(t, err) {
+					defer f.Close()
 
-		_, err = f.Read(buf)
-		assert.Nil(t, err)
-
-		assert.Equal(t, tt.mimeType, http.DetectContentType(buf))
+					_, err = f.Read(buf)
+					if assert.NoError(t, err) {
+						assert.Equal(t, test.mimeType, http.DetectContentType(buf))
+					}
+				}
+			}
+		})
 	}
 }
 
 func TestGenerateFromString(t *testing.T) {
-	// Male test
-	avatar1, err := GenerateForUsername(MALE, "username@site.com")
-	bounds := avatar1.Bounds()
+	testCases := map[string]struct {
+		gender    Gender
+		areEqual  bool
+		username1 string
+		username2 string
+		err       error
+	}{
+		"equal": {
+			gender:    MALE,
+			areEqual:  true,
+			username1: "username@site.com",
+			username2: "username@site.com",
+		},
+		"not equal": {
+			gender:    MALE,
+			areEqual:  false,
+			username1: "username@site.com",
+			username2: "another-username@site.com",
+		},
+		"error": {
+			gender:    Gender(-1),
+			username1: "username@site.com",
+			username2: "username@site.com",
+			err:       ErrUnsupportedGender,
+		},
+	}
 
-	assert.NoError(t, err)
-	assert.NotNil(t, avatar1)
-	assert.False(t, bounds.Empty())
-	assert.Equal(t, 400, bounds.Dx())
-	assert.Equal(t, 400, bounds.Dy())
+	for name, test := range testCases {
+		t.Run(name, func(t *testing.T) {
+			avatar1, err := GenerateForUsername(test.gender, test.username1)
+			assert.Equal(t, test.err, err)
+			if test.err == nil && assert.NotNil(t, avatar1) {
+				bounds := avatar1.Bounds()
+				assert.False(t, bounds.Empty())
+				assert.Equal(t, 400, bounds.Dx())
+				assert.Equal(t, 400, bounds.Dy())
 
-	avatar2, err := GenerateForUsername(MALE, "username@site.com")
-	assert.NoError(t, err)
-	assert.True(t, areImagesEquals(avatar1, avatar2))
-
-	// Female test
-	avatar1, err = GenerateForUsername(FEMALE, "username@site.com")
-	assert.NoError(t, err)
-
-	avatar2, err = GenerateForUsername(FEMALE, "username2@site.com")
-	assert.NoError(t, err)
-
-	assert.False(t, areImagesEquals(avatar1, avatar2))
+				avatar2, err := GenerateForUsername(test.gender, test.username2)
+				if assert.NoError(t, err) {
+					assert.Equal(t, test.areEqual, areImagesEqual(avatar1, avatar2))
+				}
+			}
+		})
+	}
 
 }
 
 func TestGenerateFileFromString(t *testing.T) {
-	generateFileFromStringTest(t, MALE)
-	generateFileFromStringTest(t, FEMALE)
-}
-
-func generateFileFromStringTest(t *testing.T, gender Gender) {
-	imagesTests := []struct {
+	fileName := randStringRunes(6)
+	testCases := map[string]struct {
 		imageName string
 		mimeType  string
 	}{
-		{"avatar.jpeg", "image/jpeg"},
-		{"avatar.jpg", "image/jpeg"},
-		{"avatar.png", "image/png"},
-		{"avatar.gif", "image/gif"},
-		{"avatar.xyz", "image/png"},
+		"jpeg": {imageName: fileName + ".jpeg", mimeType: "image/jpeg"},
+		"jpg":  {imageName: fileName + ".jpg", mimeType: "image/jpeg"},
+		"png":  {imageName: fileName + ".png", mimeType: "image/png"},
+		"gif":  {imageName: fileName + ".gif", mimeType: "image/gif"},
+		"xyz":  {imageName: fileName + ".xyz", mimeType: "image/png"},
 	}
 
-	for _, tt := range imagesTests {
-		os.Remove(tt.imageName)
-		err := GenerateFileForUsername(gender, "username@site.com", tt.imageName)
-		assert.Nil(t, err)
+	for name, test := range testCases {
+		t.Run(name, func(t *testing.T) {
+			os.Remove(test.imageName)
+			defer os.Remove(test.imageName)
+			err := GenerateFileForUsername(MALE, "username@site.com", test.imageName)
+			if assert.NoError(t, err) {
+				buf := make([]byte, 512)
+				f, err := os.Open(test.imageName)
+				if assert.NoError(t, err) {
+					defer f.Close()
 
-		buf := make([]byte, 512)
-		f, err := os.Open(tt.imageName)
-		assert.Nil(t, err)
-		defer f.Close()
-
-		_, err = f.Read(buf)
-		assert.Nil(t, err)
-
-		assert.Equal(t, tt.mimeType, http.DetectContentType(buf))
+					_, err = f.Read(buf)
+					if assert.NoError(t, err) {
+						assert.Equal(t, test.mimeType, http.DetectContentType(buf))
+					}
+				}
+			}
+		})
 	}
 }
 
-func areImagesEquals(a, b image.Image) bool {
+func areImagesEqual(a, b image.Image) bool {
 	ab, bb := a.Bounds(), b.Bounds()
 	w, h := ab.Dx(), ab.Dy()
 	if w != bb.Dx() || h != bb.Dy() {
