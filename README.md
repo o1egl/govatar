@@ -7,17 +7,17 @@
 
 ![GOvatar image](files/avatars.jpg)
 
-GOvatar is an avatar generation library writen in GO
+GOvatar is an avatar generation library written in GO
 
 ## Install
 
-To install the library and command line program, use the following:
+To install the library and command-line program, use the following:
 
 ```
 $ go get -u github.com/o1egl/govatar/...
 ```
 
-[Binary packages](https://github.com/o1egl/govatar/releases) are available for Mac, Linux and Windows.
+[Binary packages](https://github.com/o1egl/govatar/releases) are available for Mac, Linux, and Windows.
 
 ## Usage
 
@@ -37,7 +37,7 @@ Generates avatar and save it to filePath
     err := govatar.GenerateFileFromUsername(govatar.MALE, "username", "/path/to/avatar.jpg")
 ````
 
-Generates avatar and return it as image.Image
+Generates an avatar and returns it as an image.Image
 
 ```go
     img, err := govatar.Generate(govatar.MALE)
@@ -49,7 +49,7 @@ Generates avatar and return it as image.Image
 
 ### Adding new skins
 
-1. Add new skins to background, male/clothes, female/hair and etc...
+1. Add new skins to the background, male/clothes, female/hair, etc...
 2. Run ``$ make assets`` for building embedded assets.
 3. Submit pull request :)
 
