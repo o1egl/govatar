@@ -41,7 +41,7 @@ Generates an avatar and returns it as an image.Image
 
 ```go
     img, err := govatar.Generate(govatar.MALE)
-    img, err := govatar.GenerateFromUsername(govatar.MALE, "username")
+    img, err := govatar.GenerateForUsername(govatar.MALE, "username")
 ````
 
 
