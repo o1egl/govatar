@@ -19,10 +19,6 @@ build:
     - linux
     - windows
     - freebsd
-    - netbsd
-    - openbsd
-    - dragonfly
-    - solaris
   goarch:
     - amd64
     - 386
@@ -35,13 +31,7 @@ build:
   ignore:
     - goos: darwin
       goarch: 386
-    - goos: openbsd
-      goarch: arm
     - goos: freebsd
-      goarch: arm
-    - goos: netbsd
-      goarch: arm
-    - goos: solaris
       goarch: arm
 
 archives:
