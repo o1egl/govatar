@@ -15,12 +15,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
         with:
-          version: 1.37.1
-      - name: Build
-        run: go build -v ./...
-
-      - name: Test
-        run: go test -v ./...
+          version: v1.37.1
   test:
     runs-on: ubuntu-latest
     steps:
