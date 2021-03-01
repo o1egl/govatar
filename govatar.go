@@ -100,10 +100,10 @@ func GenerateFileForUsername(gender Gender, username string, filePath string) er
 
 func saveToFile(img image.Image, filePath string) error {
 	outFile, err := os.Create(filePath)
-	defer outFile.Close()
 	if err != nil {
 		return err
 	}
+	defer outFile.Close()
 
 	switch strings.ToLower(filepath.Ext(filePath)) {
 	case ".jpeg", ".jpg":
