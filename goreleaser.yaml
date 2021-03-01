@@ -1,0 +1,64 @@
+project_name: govatar
+
+env:
+  - GO111MODULE=on
+
+before:
+  hooks:
+    - go mod download
+
+build:
+  env:
+    - CGO_ENABLED=0
+  ldflags:
+    - -s -w -X main.version={{ .Version }}
+  main: govatar/main.go
+  binary: govatar
+  goos:
+    - darwin
+    - linux
+    - windows
+    - freebsd
+    - netbsd
+    - openbsd
+    - dragonfly
+    - solaris
+  goarch:
+    - amd64
+    - 386
+    - arm
+    - arm64
+  goarm:
+    - 5
+    - 6
+    - 7
+  ignore:
+    - goos: darwin
+      goarch: 386
+    - goos: openbsd
+      goarch: arm
+    - goos: freebsd
+      goarch: arm
+    - goos: netbsd
+      goarch: arm
+    - goos: solaris
+      goarch: arm
+
+archives:
+  -
+    name_template: "{{.Os}}-{{.Arch}}{{if .Arm}}v{{.Arm}}{{end}}-{{ .ProjectName }}"
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+
+dockers:
+  -
+    dockerfile: Dockerfile
+    goos: linux
+    goarch: amd64
+    goarm: ''
+    image_templates:
+      - "o1egl/govatar:latest"
+      - "o1egl/govatar:{{ .Tag }}"
+      - "o1egl/govatar:v{{ .Major }}"
