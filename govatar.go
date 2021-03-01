@@ -2,6 +2,7 @@ package govatar
 
 import (
 	"bytes"
+	"embed"
 	"errors"
 	"hash/fnv"
 	"image"
@@ -9,14 +10,13 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
+	"io/fs"
 	"math/rand"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 	"time"
-
-	"github.com/o1egl/govatar/bindata"
 )
 
 var ErrUnsupportedGender = errors.New("unsupported gender")
@@ -46,23 +46,19 @@ const (
 	FEMALE
 )
 
+//go:embed data/*
+var dataFS embed.FS
+
 func init() {
 	male := getPerson(MALE)
 	female := getPerson(FEMALE)
-	assetsStore = &store{Background: assetsList("data/background"), Male: male, Female: female}
+	assetsStore = &store{Background: mustAssetsList("data/background"), Male: male, Female: female}
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
 // Generate generates random avatar
 func Generate(gender Gender) (image.Image, error) {
-	switch gender {
-	case MALE:
-		return randomAvatar(assetsStore.Male, time.Now().UnixNano())
-	case FEMALE:
-		return randomAvatar(assetsStore.Female, time.Now().UnixNano())
-	default:
-		return nil, ErrUnsupportedGender
-	}
+	return GenerateForUsername(gender, time.Now().String())
 }
 
 // GenerateFile generates random avatar and save it to specified file.
@@ -104,10 +100,11 @@ func GenerateFileForUsername(gender Gender, username string, filePath string) er
 
 func saveToFile(img image.Image, filePath string) error {
 	outFile, err := os.Create(filePath)
-	defer outFile.Close()
 	if err != nil {
 		return err
 	}
+	defer outFile.Close()
+
 	switch strings.ToLower(filepath.Ext(filePath)) {
 	case ".jpeg", ".jpg":
 		err = jpeg.Encode(outFile, img, &jpeg.Options{Quality: 80})
@@ -136,12 +133,20 @@ func drawImg(dst draw.Image, asset string, err error) error {
 	if err != nil {
 		return err
 	}
-	src, _, err := image.Decode(bytes.NewReader(bindata.MustAsset(asset)))
+	src, _, err := image.Decode(bytes.NewReader(mustAsset(asset)))
 	if err != nil {
 		return err
 	}
 	draw.Draw(dst, dst.Bounds(), src, image.Point{0, 0}, draw.Over)
 	return nil
+}
+
+func mustAsset(fPath string) []byte {
+	b, err := fs.ReadFile(dataFS, fPath)
+	if err != nil {
+		panic(err)
+	}
+	return b
 }
 
 func getPerson(gender Gender) person {
@@ -155,18 +160,22 @@ func getPerson(gender Gender) person {
 	}
 
 	return person{
-		Clothes: assetsList("data/" + genderPath + "/clothes"),
-		Eye:     assetsList("data/" + genderPath + "/eye"),
-		Face:    assetsList("data/" + genderPath + "/face"),
-		Hair:    assetsList("data/" + genderPath + "/hair"),
-		Mouth:   assetsList("data/" + genderPath + "/mouth"),
+		Clothes: mustAssetsList("data/" + genderPath + "/clothes"),
+		Eye:     mustAssetsList("data/" + genderPath + "/eye"),
+		Face:    mustAssetsList("data/" + genderPath + "/face"),
+		Hair:    mustAssetsList("data/" + genderPath + "/hair"),
+		Mouth:   mustAssetsList("data/" + genderPath + "/mouth"),
 	}
 }
 
-func assetsList(dir string) []string {
-	assets, _ := bindata.AssetDir(dir)
-	for i, asset := range assets {
-		assets[i] = filepath.Join(dir, asset)
+func mustAssetsList(dir string) []string {
+	dirEntries, err := fs.ReadDir(dataFS, dir)
+	if err != nil {
+		panic(err)
+	}
+	assets := make([]string, len(dirEntries))
+	for i, dirEntry := range dirEntries {
+		assets[i] = filepath.Join(dir, dirEntry.Name())
 	}
 	sort.Sort(naturalSort(assets))
 	return assets
