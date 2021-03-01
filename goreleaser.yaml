@@ -1,8 +1,5 @@
 project_name: govatar
 
-env:
-  - GO111MODULE=on
-
 before:
   hooks:
     - go mod download
