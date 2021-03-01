@@ -2,4 +2,4 @@
 build/
 .idea
 vendor
-glide.lock
+coverage.txt
