@@ -1,7 +1,7 @@
 # GOvatar
 [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE)
 [![GoDoc](https://godoc.org/github.com/o1egl/govatar?status.svg)](https://godoc.org/github.com/o1egl/govatar)
-[![Actions Status](https://github.com/o1egl/govatar/workflows/build/badge.svg)](https://github.com/o1egl/govatar/actions)
+[![CI Test](https://github.com/o1egl/govatar/actions/workflows/ci-test.yaml/badge.svg?branch=master)](https://github.com/o1egl/govatar/actions/workflows/ci-test.yaml)
 [![Coverage](https://codecov.io/gh/o1egl/govatar/branch/master/graph/badge.svg)](https://codecov.io/gh/o1egl/govatar)
 [![Go Report Card](https://goreportcard.com/badge/github.com/o1egl/govatar)](https://goreportcard.com/report/github.com/o1egl/govatar)
 
