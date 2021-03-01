@@ -1,8 +1,11 @@
 name: release
 
 on:
-  push:
+  workflow_run:
+    workflows: ["test"]
     tags: v*
+    types:
+      - completed
 
 jobs:
   goreleaser:

@@ -62,3 +62,18 @@ dockers:
       - "o1egl/govatar:latest"
       - "o1egl/govatar:{{ .Tag }}"
       - "o1egl/govatar:v{{ .Major }}"
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+brews:
+  - name: govatar
+    tap:
+      owner: o1egl
+      name: homebrew-tap
+    homepage: https://github.com/o1egl/govatar
+    description: GOvatar is an avatar generation library written in GO
+    license: "MIT"
