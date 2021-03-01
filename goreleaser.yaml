@@ -75,5 +75,8 @@ brews:
       owner: o1egl
       name: homebrew-tap
     homepage: https://github.com/o1egl/govatar
+    commit_author:
+      name: Oleg Lobanov
+      email: oleg@lobanov.me
     description: GOvatar is an avatar generation library written in GO
     license: "MIT"
