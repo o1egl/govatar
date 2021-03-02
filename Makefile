@@ -7,7 +7,6 @@ ext = $(word 3, $(temp))
 VERSION := $(shell git describe --always --abbrev=6 --tags)
 
 .PHONY: build
-
 build: clean $(PLATFORMS);
 
 clean:

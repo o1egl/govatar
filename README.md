@@ -9,15 +9,35 @@
 
 GOvatar is an avatar generation library written in GO
 
+---
+
+#### Notes
+1. From release v0.4.0 onward, the minimal supported golang version is 1.16.
+
+---
+
 ## Install
 
-To install the library and command-line program, use the following:
+### Brew
+
+```
+$ brew tap o1egl/tap
+$ brew install govatar
+```
+
+### Docker
+
+```
+$ docker pull o1egl/govatar
+```
+
+### From source
 
 ```
 $ go get -u github.com/o1egl/govatar/...
 ```
 
-[Binary packages](https://github.com/o1egl/govatar/releases) are available for Mac, Linux, and Windows.
+Prebuilt [binary packages](https://github.com/o1egl/govatar/releases) are available for Mac, Linux, and Windows.
 
 ## Usage
 
@@ -50,8 +70,7 @@ Generates an avatar and returns it as an image.Image
 ### Adding new skins
 
 1. Add new skins to the background, male/clothes, female/hair, etc...
-2. Run ``$ make assets`` for building embedded assets.
-3. Submit pull request :)
+2. Submit pull request :)
 
 ### Submitting a Pull Request
 
