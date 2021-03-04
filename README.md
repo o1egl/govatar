@@ -42,10 +42,10 @@ Prebuilt [binary packages](https://github.com/o1egl/govatar/releases) are availa
 ## Usage
 
 ```bash
-    $ govatar generate male -o avatar.png                        # Generates random avatar.png for male
-    $ govatar generate female -o avatar.png                      # Generates random avatar.png for female
-    $ govatar generate male -u username@site.com -o avatar.png   # Generates avatar.png for specified username
-    $ govatar -h                                                 # Display help message
+$ govatar generate male -o avatar.png                        # Generates random avatar.png for male
+$ govatar generate female -o avatar.png                      # Generates random avatar.png for female
+$ govatar generate male -u username@site.com -o avatar.png   # Generates avatar.png for specified username
+$ govatar -h                                                 # Display help message
 ```
 
 #### As lib
@@ -53,15 +53,15 @@ Prebuilt [binary packages](https://github.com/o1egl/govatar/releases) are availa
 Generates avatar and save it to filePath
 
 ```go
-    err := govatar.GenerateFile(govatar.MALE, "/path/to/avatar.jpg"
-    err := govatar.GenerateFileFromUsername(govatar.MALE, "username", "/path/to/avatar.jpg")
+err := govatar.GenerateFile(govatar.MALE, "/path/to/avatar.jpg")
+err := govatar.GenerateFileFromUsername(govatar.MALE, "username", "/path/to/avatar.jpg")
 ````
 
 Generates an avatar and returns it as an image.Image
 
 ```go
-    img, err := govatar.Generate(govatar.MALE)
-    img, err := govatar.GenerateForUsername(govatar.MALE, "username")
+img, err := govatar.Generate(govatar.MALE)
+img, err := govatar.GenerateForUsername(govatar.MALE, "username")
 ````
 
 
