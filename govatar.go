@@ -176,6 +176,7 @@ func mustAssetsList(dir string) []string {
 	assets := make([]string, len(dirEntries))
 	for i, dirEntry := range dirEntries {
 		assets[i] = filepath.Join(dir, dirEntry.Name())
+		assets[i] = filepath.ToSlash(assets[i])
 	}
 	sort.Sort(naturalSort(assets))
 	return assets
