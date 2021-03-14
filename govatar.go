@@ -13,6 +13,7 @@ import (
 	"io/fs"
 	"math/rand"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -175,7 +176,7 @@ func mustAssetsList(dir string) []string {
 	}
 	assets := make([]string, len(dirEntries))
 	for i, dirEntry := range dirEntries {
-		assets[i] = filepath.Join(dir, dirEntry.Name())
+		assets[i] = path.Join(dir, dirEntry.Name())
 	}
 	sort.Sort(naturalSort(assets))
 	return assets
