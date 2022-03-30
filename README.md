@@ -54,7 +54,7 @@ Generates avatar and save it to filePath
 
 ```go
 err := govatar.GenerateFile(govatar.MALE, "/path/to/avatar.jpg")
-err := govatar.GenerateFileFromUsername(govatar.MALE, "username", "/path/to/avatar.jpg")
+err := govatar.GenerateFileForUsername(govatar.MALE, "username", "/path/to/avatar.jpg")
 ````
 
 Generates an avatar and returns it as an image.Image
