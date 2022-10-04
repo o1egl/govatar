@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+</head>
+
+<body>
+  <div>
+    <center>
+      <h2>Govatar server</h2>
+      <p>Submit username and gender for avatar generator</p>
+      <form method="POST" action="/api/v1/avatar">
+        <input name="username" type="text" value="" />
+        <br><br>
+        <select name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        <br><br>
+        <input type="submit" value="Go" />
+      </form>
+      <img name="avatar"><img>
+    </center>
+  </div>
+</body>
+
+</html>
